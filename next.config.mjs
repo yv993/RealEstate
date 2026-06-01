@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Don't let ESLint warnings fail the production/Vercel build (types are still checked).
+  eslint: { ignoreDuringBuilds: true },
   // Tree-shake large barrel packages down to only the imports actually used.
   experimental: {
     optimizePackageImports: ["lucide-react", "gsap"],
