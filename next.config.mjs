@@ -1,3 +1,28 @@
+// Content-Security-Policy allowing exactly what the app needs: Supabase, Unsplash,
+// simpleicons, Google Fonts, CARTO/OSM map tiles, and Vercel analytics. Uses
+// 'unsafe-inline' for scripts because Next ships a small inline theme script and
+// hydration without a nonce pipeline.
+const csp = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "img-src 'self' data: blob: https://images.unsplash.com https://cdn.simpleicons.org https://*.basemaps.cartocdn.com https://*.tile.openstreetmap.org https://*.supabase.co",
+  "font-src 'self' https://fonts.gstatic.com",
+  "connect-src 'self' https://*.supabase.co https://va.vercel-scripts.com https://vitals.vercel-insights.com https://*.ingest.sentry.io",
+  "worker-src 'self' blob:",
+  "frame-ancestors 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+].join("; ");
+
+const securityHeaders = [
+  { key: "Content-Security-Policy", value: csp },
+  { key: "X-Frame-Options", value: "DENY" },
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+];
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Don't let ESLint warnings fail the production/Vercel build (types are still checked).
@@ -5,6 +30,9 @@ const nextConfig = {
   // Tree-shake large barrel packages down to only the imports actually used.
   experimental: {
     optimizePackageImports: ["lucide-react", "gsap"],
+  },
+  async headers() {
+    return [{ source: "/:path*", headers: securityHeaders }];
   },
   images: {
     remotePatterns: [
