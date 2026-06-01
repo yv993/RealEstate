@@ -3,6 +3,7 @@
 import { useState, CSSProperties } from "react";
 import { Mail, ArrowRight, Check, Loader2 } from "lucide-react";
 import { useToast } from "@/lib/toast";
+import { track } from "@/lib/track";
 import { Reveal } from "../motion/Reveal";
 
 export function Newsletter() {
@@ -29,6 +30,7 @@ export function Newsletter() {
       if (!res.ok) throw new Error("failed");
       setStatus("done");
       toast("You're subscribed — welcome aboard.", "success");
+      track("newsletter_signup");
     } catch {
       setStatus("error");
       setErr("Couldn't subscribe. Please try again.");

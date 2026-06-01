@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, ReactNode, CSSProperties } from "react";
 import { Phone, Mail, MapPin, Check, ArrowUpRight } from "lucide-react";
 import { gsap, prefersReducedMotion } from "@/lib/gsap";
 import { useToast } from "@/lib/toast";
+import { track } from "@/lib/track";
 import { Reveal } from "../motion/Reveal";
 
 type FormState = { name: string; email: string; phone: string; interest: string; message: string };
@@ -74,6 +75,7 @@ export function ContactBody() {
       if (!res.ok) throw new Error("Request failed");
       setSent(true);
       toast("Message sent — an advisor will be in touch.", "success");
+      track("lead_submitted", { source: "contact", interest: form.interest });
     } catch {
       setSubmitError("We couldn't send your message. Please try again or call us.");
       toast("Couldn't send your message. Please try again.", "error");
