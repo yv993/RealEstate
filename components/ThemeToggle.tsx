@@ -2,6 +2,7 @@
 
 import { useEffect, useState, CSSProperties } from "react";
 import { Sun, Moon } from "lucide-react";
+import { track } from "@/lib/track";
 
 export function ThemeToggle() {
   const [dark, setDark] = useState(false);
@@ -21,6 +22,7 @@ export function ThemeToggle() {
       localStorage.setItem("theme", next ? "dark" : "light");
     } catch {}
     setDark(next);
+    track("theme_changed", { theme: next ? "dark" : "light" });
     window.setTimeout(() => el.classList.remove("theme-transition"), 480);
   };
 

@@ -3,6 +3,7 @@
 import { useState, CSSProperties } from "react";
 import { CalendarCheck, Check, Loader2 } from "lucide-react";
 import { useToast } from "@/lib/toast";
+import { track } from "@/lib/track";
 import { Magnetic } from "../motion/Magnetic";
 
 type Status = "idle" | "open" | "sending" | "sent" | "error";
@@ -48,6 +49,7 @@ export function RequestViewing({
       if (!res.ok) throw new Error("Request failed");
       setStatus("sent");
       toast(`${isRent ? "Tour" : "Viewing"} request sent — we'll confirm shortly.`, "success");
+      track("viewing_requested", { property_id: propertyId, type: isRent ? "tour" : "viewing" });
     } catch {
       setStatus("error");
       setError("Something went wrong. Please try again or call us.");

@@ -2,6 +2,7 @@
 
 import { CSSProperties } from "react";
 import { useCurrency, type Currency } from "@/lib/currency";
+import { track } from "@/lib/track";
 
 export function CurrencyToggle() {
   const { currency, setCurrency, ready } = useCurrency();
@@ -12,7 +13,10 @@ export function CurrencyToggle() {
         return (
           <button
             key={c}
-            onClick={() => setCurrency(c)}
+            onClick={() => {
+              setCurrency(c);
+              track("currency_changed", { currency: c });
+            }}
             aria-pressed={on}
             style={{ ...btn, ...(on ? btnOn : {}) }}
             suppressHydrationWarning
