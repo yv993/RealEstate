@@ -1,0 +1,11 @@
+/* EstateDesg — webfont loading
+ * --------------------------------------------------------------------------
+ * Body / UI font:   Manrope        (clean modern sans — spec-approved option)
+ * Display headings: Playfair Display (elegant serif — luxury accent only)
+ *
+ * Both are loaded from Google Fonts. These are the EXACT families named in the
+ * brand brief, so no substitution was made. If you need fully offline / self-
+ * hosted .woff2 files, download them from Google Fonts and drop them here, then
+ * replace the @import below with @font-face rules.
+ */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');

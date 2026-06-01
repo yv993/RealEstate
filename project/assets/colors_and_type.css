@@ -1,0 +1,198 @@
+/* ==========================================================================
+   EstateDesg — Design Tokens & Semantic Styles
+   Single source of truth for color, type, spacing, radii, shadows, motion.
+   Import alongside fonts/fonts.css.
+   ========================================================================== */
+
+@import url('fonts/fonts.css'); /* relative to THIS file (root). Self-contained. */
+
+:root {
+  /* ---- Color: surfaces & text ------------------------------------------ */
+  --bg:            #FAFAF8;  /* off-white  — main page background            */
+  --surface:       #FFFFFF;  /* pure white — cards, header, modals           */
+  --fg1:           #1A1A1A;  /* near-black — headings, prices                */
+  --fg2:           #6B6B6B;  /* warm gray  — labels, descriptions, meta      */
+  --border:        #EAEAEA;  /* light gray — card edges, separators          */
+
+  /* ---- Color: accent (the only "pop" — use sparingly) ------------------ */
+  --accent:        #B08D57;  /* deep gold / bronze — buttons, links, active  */
+  --accent-hover:  #94733F;  /* darker bronze — hover / pressed              */
+  --accent-tint:   #F4EFE7;  /* faint bronze wash — selected rows, hover fill*/
+
+  /* ---- Color: semantic & dark ------------------------------------------ */
+  --success:       #3F7D5A;  /* muted green — "Available" badge              */
+  --charcoal:      #181818;  /* footer, optional dark hero band              */
+  --on-charcoal:   #FFFFFF;
+  --on-charcoal-2: #9A9A98;  /* muted gray text on charcoal                  */
+
+  /* ---- Typography: families -------------------------------------------- */
+  --font-sans:    'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+
+  /* ---- Typography: scale (px) ------------------------------------------ */
+  --text-hero:    52px;  /* page title       48–56 / 600 / tight            */
+  --text-section: 30px;  /* section title    28–32 / 600                    */
+  --text-price:   22px;  /* property price   22    / 600                    */
+  --text-card:    16px;  /* card title       16    / 500                    */
+  --text-body:    15px;  /* body / meta      14–15 / 400                    */
+  --text-meta:    14px;
+  --text-label:   12px;  /* small labels     12    / 500 / uppercase        */
+
+  /* ---- Typography: weights / spacing / leading ------------------------- */
+  --w-regular: 400;
+  --w-medium:  500;
+  --w-semibold:600;
+  --w-bold:    700;
+  --tracking-tight: -0.02em;
+  --tracking-label:  0.05em;
+  --leading-body: 1.5;
+  --leading-head: 1.2;
+
+  /* ---- Spacing: 8px base grid ------------------------------------------ */
+  --space-1:  8px;   /* tiny   */
+  --space-2:  16px;  /* small  */
+  --space-3:  24px;  /* medium */
+  --space-4:  40px;  /* large  */
+  --space-5:  64px;  /* xl / section padding */
+
+  /* ---- Radii ----------------------------------------------------------- */
+  --radius-input: 10px;  /* inputs, dropdowns          */
+  --radius-card:  16px;  /* property cards, surfaces   */
+  --radius-btn:   12px;  /* buttons, filter bar        */
+  --radius-pill:  999px; /* badges, pills              */
+
+  /* ---- Shadows (very soft — premium, never heavy) ---------------------- */
+  --shadow-sm: 0 1px 2px rgba(24,24,24,0.04);
+  --shadow-md: 0 4px 16px rgba(24,24,24,0.06);
+  --shadow-lg: 0 12px 32px rgba(24,24,24,0.10); /* card hover */
+
+  /* ---- Layout ---------------------------------------------------------- */
+  --content-max: 1280px;
+  --header-h:    72px;
+
+  /* ---- Motion (subtle, consistent) ------------------------------------- */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1); /* ease-out */
+  --t-fast: 200ms;
+  --t-card: 350ms;
+}
+
+/* ==========================================================================
+   Base / semantic element styles
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg1);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  font-weight: var(--w-regular);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Headings -------------------------------------------------------------- */
+.h-hero {
+  font-family: var(--font-display);
+  font-size: var(--text-hero);
+  font-weight: var(--w-semibold);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-head);
+  color: var(--fg1);
+  margin: 0;
+}
+.h-section {
+  font-family: var(--font-sans);
+  font-size: var(--text-section);
+  font-weight: var(--w-semibold);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-head);
+  color: var(--fg1);
+  margin: 0;
+}
+.t-price {
+  font-size: var(--text-price);
+  font-weight: var(--w-semibold);
+  color: var(--fg1);
+  letter-spacing: var(--tracking-tight);
+}
+.t-card-title {
+  font-size: var(--text-card);
+  font-weight: var(--w-medium);
+  color: var(--fg1);
+}
+.t-meta {
+  font-size: var(--text-meta);
+  font-weight: var(--w-regular);
+  color: var(--fg2);
+}
+.t-label {
+  font-size: var(--text-label);
+  font-weight: var(--w-medium);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+}
+
+a { color: var(--accent); text-decoration: none; transition: color var(--t-fast) var(--ease); }
+a:hover { color: var(--accent-hover); }
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+.btn {
+  font-family: var(--font-sans);
+  font-size: var(--text-meta);
+  font-weight: var(--w-medium);
+  padding: 12px 24px;
+  border-radius: var(--radius-btn);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all var(--t-fast) var(--ease);
+  line-height: 1;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-outline { background: transparent; color: var(--accent); border-color: var(--accent); }
+.btn-outline:hover { background: var(--accent-tint); }
+.btn-ghost { background: transparent; color: var(--fg2); padding-left: 0; padding-right: 0; }
+.btn-ghost:hover { color: var(--fg1); text-decoration: underline; }
+
+/* ==========================================================================
+   Inputs / selects
+   ========================================================================== */
+.field {
+  font-family: var(--font-sans);
+  font-size: var(--text-meta);
+  color: var(--fg1);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-input);
+  padding: 10px 14px;
+  transition: border-color var(--t-fast) var(--ease);
+}
+.field::placeholder { color: var(--fg2); }
+.field:focus { outline: none; border-color: var(--accent); }
+
+/* ==========================================================================
+   Surfaces & badges
+   ========================================================================== */
+.surface { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-card); }
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--text-label);
+  font-weight: var(--w-medium);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  padding: 5px 10px;
+  border-radius: var(--radius-pill);
+}
+.badge-dark    { background: rgba(24,24,24,0.62); color: #fff; backdrop-filter: blur(4px); }
+.badge-success { background: var(--success); color: #fff; }
