@@ -1,10 +1,3 @@
-import bundleAnalyzer from "@next/bundle-analyzer";
-
-const withBundleAnalyzer = bundleAnalyzer({
-  enabled: process.env.ANALYZE === "true",
-  openAnalyzer: false,
-});
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Tree-shake large barrel packages down to only the imports actually used.
@@ -21,4 +14,13 @@ const nextConfig = {
   },
 };
 
-export default withBundleAnalyzer(nextConfig);
+// Only pull in @next/bundle-analyzer when explicitly running an analysis
+// (ANALYZE=true). This keeps it out of the normal production build, so a
+// dev-only dependency can never break deploys (e.g. on Vercel).
+export default async () => {
+  if (process.env.ANALYZE === "true") {
+    const { default: withBundleAnalyzer } = await import("@next/bundle-analyzer");
+    return withBundleAnalyzer({ enabled: true, openAnalyzer: false })(nextConfig);
+  }
+  return nextConfig;
+};
