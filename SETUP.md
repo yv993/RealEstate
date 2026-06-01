@@ -112,3 +112,56 @@ you manage listings. It's free to start.
 - `supabase/schema.sql` + `seed.sql` — your database setup.
 - `design.md` / `project_specs.md` — the blueprints. `ROADMAP.md` — the build plan.
 - `.env.local` — your secret keys (never shared).
+
+---
+
+# Part D — Going fully live (database, email, monitoring)
+
+The code is deployed, but a few switches only **you** can flip (they need your own
+accounts). Do them in this order. After each, the site gets more "real."
+
+## D0. The one-glance health check
+Once deployed, open **`https://YOUR-DOMAIN/api/health`** any time. It tells you the truth:
+- `"source":"static"` → still on the built-in demo data (leads are only logged, not saved).
+- `"source":"database"` → connected to your real Supabase (leads persist, admin works).
+
+## D1. Add environment variables in Vercel
+Vercel → your project → **Settings → Environment Variables**. Add these (the file
+`.env.local.example` lists them too). After adding, **Redeploy** so they take effect.
+
+| Variable | Where to find it | Powers |
+|---|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase → Settings → API → **Project URL** | database |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | same page → **anon public** | reads + admin login |
+| `SUPABASE_SERVICE_ROLE_KEY` | same page → **service_role** (secret!) | saving leads, admin writes |
+| `NEXT_PUBLIC_SITE_URL` | your live domain, e.g. `https://real-estate.vercel.app` | SEO, sitemap, share cards |
+| `RESEND_API_KEY` | resend.com → **API Keys** (optional) | lead/newsletter emails |
+| `AGENCY_EMAIL` | your inbox, e.g. `you@gmail.com` | where lead alerts go |
+| `SENTRY_DSN` | sentry.io → Project → **Client Keys (DSN)** (optional) | error alerts |
+
+## D2. Turn the database on (Supabase)
+1. supabase.com → **New project** (save the DB password).
+2. **SQL Editor → New query** → paste all of `supabase/schema.sql` → **Run**. This makes the
+   `properties`, `leads`, and `subscribers` tables, the security rules (public can read only
+   published listings; only logged-in staff can edit; leads save server-side only), and the
+   `property-images` storage bucket.
+3. New query → paste `supabase/seed.sql` → **Run** (fills in the 20 demo listings so nothing
+   looks empty).
+4. **Authentication → Users → Add user** → your email + password, tick **Auto Confirm**. That's
+   your login for `/admin`.
+5. Make sure the three Supabase vars from D1 are in Vercel, then **Redeploy**.
+6. Check `/api/health` → it should now say `"source":"database"`. Log into `/admin`, edit a
+   listing, and watch the public page update.
+
+## D3. Make leads reach your inbox (Resend — optional but recommended)
+1. resend.com → sign up → **API Keys → Create**. Copy the key.
+2. Add `RESEND_API_KEY` and `AGENCY_EMAIL` in Vercel → Redeploy.
+3. Submit the contact form on your live site — you get an email, and the visitor gets an
+   auto-reply. (Without the key, leads still save; emails are just skipped.)
+4. To send from your own domain later: Resend → **Domains** → verify `evergreen.am`, then set
+   `EMAIL_FROM` to e.g. `EverGreen <hello@evergreen.am>`.
+
+## D4. Analytics & error alerts (optional)
+- **Vercel Analytics + Speed Insights**: no keys — open the **Analytics** and **Speed Insights**
+  tabs in your Vercel project and click **Enable**. Traffic + Core Web Vitals start flowing.
+- **Sentry**: add `SENTRY_DSN` in Vercel for runtime error alerts. Skipped entirely if unset.
